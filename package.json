@@ -9,7 +9,7 @@
     "test": "ava --tap | tap-mocha-reporter spec"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "ava": "^0.14.0",
     "babel-core": "^6.7.7",
