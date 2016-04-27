@@ -10,7 +10,8 @@ export function createChildren (particles, options) {
   return [ne, nw, sw, se];
 }
 
-export function createNode (particles, { x, y, width, height }) {
+export function createNode (particles, options) {
+  let { x, y, width, height } = options;
   let node =  {
     particle: null,
     x: x,
