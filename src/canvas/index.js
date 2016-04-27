@@ -4,7 +4,7 @@
 export function initCanvas (canvas) {
   const context = canvas.getContext('2d');
 
-  const width = window.innerWidth;
+  const width = window.innerHeight;
   const height = window.innerHeight;
   const ratio = window.devicePixelRatio;
 
