@@ -1,11 +1,29 @@
-console.log('loaded');
+import { initCanvas } from './canvas/index';
+import { createDot } from './canvas/primitives';
+import { seededRandom } from './utils/math';
+import { times } from './utils/index';
 
-const ratio = window.devicePixelRatio;
+const random = seededRandom(12345);
 const canvas = document.getElementById('canvas');
+const context = initCanvas(canvas);
 const width = window.innerWidth;
-const height = window.innerHeight;\
+const height = window.innerHeight;
 
-canvas.width = width * ratio;
-canvas.height = height * ratio;
-canvas.style.width = `${width}px`;
-canvas.style.height = `${height}px`;
+const createParticle = function () {
+  return {
+    x: random() * width,
+    y: random() * height,
+    radius: (random() * 0.72) + 0.13
+  };
+}
+
+createDot(context, {
+  x: width / 2, y: height / 2, radius: 2, color: 'white'
+});
+
+let particles = [];
+times(1000, (i) => particles.push(createParticle()));
+
+particles.forEach((p) => {
+  createDot(context, { x: p.x, y: p.y, radius: p.radius, color: 'white' });
+});
