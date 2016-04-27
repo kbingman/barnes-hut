@@ -6,7 +6,7 @@
   "scripts": {
     "start": "serve public",
     "build": "webpack",
-    "watch": "webpack -w --colors --progress",
+    "watch": "webpack -w --colors",
     "test": "ava --tap | tap-mocha-reporter spec"
   },
   "author": "",

@@ -6,7 +6,6 @@ module.exports = {
     entry: [ './src/app' ],
     output: {
         path: path.join(__dirname, 'public'),
-        publicPath: '/',
         filename: 'app.js'
     },
     resolve: {
@@ -28,10 +27,6 @@ module.exports = {
                     plugins: ['transform-object-assign']
                 },
                 include: path.resolve('..', __dirname)
-            },
-            {
-                test: /\.json$/,
-                loader: 'json'
             }
         ]
     }
