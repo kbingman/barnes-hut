@@ -22,7 +22,7 @@ const createParticle = function () {
 }
 
 let particles = [];
-times(7, (i) => particles.push(createParticle()));
+times(500, (i) => particles.push(createParticle()));
 
 particles.forEach((p) => {
   createDot(context, { x: p.x, y: p.y, radius: p.radius, color: 'white' });
