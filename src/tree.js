@@ -1,50 +1,59 @@
-export function createChildren (particles, options) {
-  let parent = options.parent;
+import { contains } from './utils/index';
+
+export function createTree (particles, options) {
+  let root = {
+    x: options.x,
+    y: options.y,
+    width: options.width,
+    height: options.height
+  }
+  particles.forEach(p => updateNode(p, root));
+
+  return root;
+}
+
+/**
+ * 1. No particle exists, add it and be done with it
+ * 2. Particle exists. Create children, move both new and old particle, move on to next
+ * 3. Children exist. Find correct child and repeat this procedure
+ */
+
+export function updateNode (particle, node) {
+  if (!contains(particle, node)) {
+    return;
+  }
+  node.mass += particle.mass;
+
+  if (!node.particle && !node.children) {
+    node.particle = particle;
+    node.mass = particle.mass;
+  }
+  else if (!node.children) {
+    node.children = divideNode([particle, node.particle], node);
+    delete node.particle;
+  }
+  else if (node.children && node.children.length) {
+    let child = node.children.find((n) => contains(particle, n));
+    updateNode(particle, child);
+  }
+}
+
+export function divideNode (particles, options) {
   let width = options.width / 2;
   let height = options.height / 2;
 
-  let ne = createNode(particles, { parent, x: options.x, y: options.y, width, height });
-  let nw = createNode(particles, { parent, x: options.x + height, y: options.y, width, height });
-  let sw = createNode(particles, { parent, x: options.x + height, y: options.y + height, width, height });
-  let se = createNode(particles, { parent, x: options.x, y: options.y + height, width, height });
+  let nodes = [
+    { x: options.x, y: options.y, width, height },
+    { x: options.x + height, y: options.y, width, height },
+    { x: options.x + height, y: options.y + height, width, height },
+    { x: options.x, y: options.y + height, width, height }
+  ];
 
-  return [ne, nw, sw, se];
-}
-
-export function createNode (particles, options) {
-  let { x, y, width, height, parent } = options;
-
-  particles = particles.filter((p) => {
-    return (p.x > x && p.x < x + width) && (p.y > y && p.y < y + height);
-  });
-
-  let node =  {
-    // parent: parent,
-    particle: null,
-    x: x,
-    y: y,
-    width: width,
-    height: height,
-    // depth: options.depth,
-    mass: particles.reduce((t, p) => { t += p.mass; return t }, 0)
-  }
-
-  if (node.mass) {
-    let xm = particles.reduce((memo, p) => { memo += p.x; return memo;}, 0);
-    let ym = particles.reduce((memo, p) => { memo += p.y; return memo;}, 0);
-    node.center = {
-      x: xm / node.mass,
-      y: ym / node.mass
-    };
-  }
-
-
-  if (particles.length < 2) {
-    node.particle = particles[0];
+  return nodes.map((node) => {
+    let particle = particles.find((p) => contains(p, node));
+    if (particle) {
+      updateNode(particle, node);
+    }
     return node;
-  }
-
-  // options.parent = node;
-  node.children = createChildren (particles, options);
-  return node;
+  });
 }

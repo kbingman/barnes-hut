@@ -3,7 +3,7 @@ import { createDot } from './canvas/primitives';
 import { seededRandom } from './utils/math';
 import { times } from './utils/index';
 
-import { createNode } from './tree';
+import { createNode, createTree } from './tree';
 
 const random = seededRandom(12345);
 const canvas = document.getElementById('canvas');
@@ -22,14 +22,15 @@ const createParticle = function () {
 }
 
 let particles = [];
-times(500, (i) => particles.push(createParticle()));
-
+times(700, (i) => particles.push(createParticle()));
+let start = +new Date();
 particles.forEach((p) => {
   createDot(context, { x: p.x, y: p.y, radius: p.radius, color: 'white' });
 });
+console.log(+new Date() - start);
 
-const start = +new Date();
-const tree = createNode(particles, { x: 0, y: 0, width: width, height: height });
+start = +new Date();
+const tree = createTree(particles, { x: 0, y: 0, width: width, height: height });
 console.log(+new Date() - start);
 console.log(tree);
 console.log(particles.reduce((t, p) => { t += p.mass; return t }, 0));
