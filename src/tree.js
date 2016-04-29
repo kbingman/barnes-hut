@@ -1,24 +1,29 @@
 import { contains } from './utils/index';
+import { sumOf } from './utils/math';
 
-export function createTree (particles, options) {
-  let root = {
-    x: options.x,
-    y: options.y,
-    width: options.width,
-    height: options.height
+/**
+ * @param {array} children
+ * @returns {object} position - X and Y coords
+ */
+const findCenter = function (children) {
+  let m = sumOf(children, 'mass');
+  if (m) {
+    let masses = children.reduce((m, c) => {
+      m.x += c.x * c.mass || 0;
+      m.y += c.y * c.mass || 0;
+      return m;
+    }, { x: 0, y: 0 });
+
+    return { x: masses.x / m, y: masses.y / m };
   }
-  particles.forEach(p => updateNode(p, root));
-
-  return root;
-}
+};
 
 /**
  * 1. No particle exists, add it and be done with it
  * 2. Particle exists. Create children, move both new and old particle, move on to next
  * 3. Children exist. Find correct child and repeat this procedure
  */
-
-export function updateNode (particle, node) {
+const updateNode = function (particle, node) {
   if (!contains(particle, node)) {
     return;
   }
@@ -27,18 +32,28 @@ export function updateNode (particle, node) {
   if (!node.particle && !node.children) {
     node.particle = particle;
     node.mass = particle.mass;
+    node.center = { x: particle.x, y: particle.y };
   }
   else if (!node.children) {
     node.children = divideNode([particle, node.particle], node);
+    node.center = findCenter(node.children);
+
     delete node.particle;
   }
   else if (node.children && node.children.length) {
     let child = node.children.find((n) => contains(particle, n));
+
     updateNode(particle, child);
+    node.center = findCenter(node.children);
   }
 }
 
-export function divideNode (particles, options) {
+/**
+ * @param {array} particles
+ * @param {object} options
+ * @returns {array} nodes
+ */
+const divideNode = function (particles, options) {
   let width = options.width / 2;
   let height = options.height / 2;
 
@@ -56,4 +71,15 @@ export function divideNode (particles, options) {
     }
     return node;
   });
+}
+
+/**
+ * @param {array} particles
+ * @param {object} root
+ * @returns {object} root node
+ */
+export function createTree (particles, root) {
+  particles.forEach(p => updateNode(p, root));
+
+  return root;
 }

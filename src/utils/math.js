@@ -10,3 +10,10 @@ export function seededRandom (seed) {
     return x / m;
   };
 };
+
+export function sumOf (array, attr) {
+  return array.reduce((m, c) => {
+    m += c[attr] || 0;
+    return m;
+  }, 0);
+}
