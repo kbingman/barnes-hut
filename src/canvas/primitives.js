@@ -5,6 +5,12 @@ export function createCircle (context, {x, y, radius, color}) {
   context.stroke();
 }
 
+export function createRectangle (context, {x, y, width, height, color}) {
+  context.strokeStyle = color || 'hsla(0, 100%, 100%, 0.3)';
+  context.rect(x, y, width, height);
+  context.stroke();
+}
+
 export function createEllipse (context, {x, y, radiusX, radiusY, color, angle, stroke}) {
   const diff = radiusX - radiusY;
   angle = angle || 0;

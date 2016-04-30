@@ -34,7 +34,7 @@ const updateNode = function (particle, node) {
     node.mass = particle.mass;
     node.center = { x: particle.x, y: particle.y };
   }
-  else if (!node.children) {
+  else if (!node.children && node.particle) {
     node.children = divideNode([particle, node.particle], node);
     node.center = findCenter(node.children);
 
@@ -53,18 +53,18 @@ const updateNode = function (particle, node) {
  * @param {object} options
  * @returns {array} nodes
  */
-const divideNode = function (particles, options) {
+const divideNode = function (particles, options, nodes) {
   let width = options.width / 2;
   let height = options.height / 2;
 
-  let nodes = [
+  let children = [
     { x: options.x, y: options.y, width, height },
-    { x: options.x + height, y: options.y, width, height },
-    { x: options.x + height, y: options.y + height, width, height },
-    { x: options.x, y: options.y + height, width, height }
+    { x: options.x + width, y: options.y, width, height },
+    { x: options.x, y: options.y + height, width, height },
+    { x: options.x + width, y: options.y + height, width, height }
   ];
+  return children.map((node) => {
 
-  return nodes.map((node) => {
     let particle = particles.find((p) => contains(p, node));
     if (particle) {
       updateNode(particle, node);
@@ -73,13 +73,36 @@ const divideNode = function (particles, options) {
   });
 }
 
+export function findParticle (particle, tree) {
+  const traverse = (particle, node) => {
+    if (node.particle && node.particle.x === particle.x && node.particle.y === particle.y) {
+      return node;
+    }
+    if (node.children) {
+      return node.children.reduce((memo, c) => {
+        let result = traverse(particle, c);
+
+        if (result) {
+          memo = result;
+        }
+        return memo;
+      }, null);
+    }
+  };
+
+  return traverse(particle, tree);
+}
+
 /**
  * @param {array} particles
  * @param {object} root
  * @returns {object} root node
  */
 export function createTree (particles, root) {
-  particles.forEach(p => updateNode(p, root));
+  let nodes = [root];
+  particles.forEach(p => {
+    updateNode(p, root);
+  });
 
   return root;
 }

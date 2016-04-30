@@ -11,9 +11,13 @@ export function seededRandom (seed) {
   };
 };
 
+export function round (num, places) {
+  return Math.round(num * Math.pow(10, places)) / Math.pow(10, places);
+}
+
 export function sumOf (array, attr) {
-  return array.reduce((m, c) => {
-    m += c[attr] || 0;
-    return m;
+  return array.reduce((total, c) => {
+    total += c[attr] || 0;
+    return total;
   }, 0);
 }
