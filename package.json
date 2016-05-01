@@ -7,7 +7,8 @@
     "start": "serve public",
     "build": "webpack",
     "watch": "webpack -w --colors",
-    "test": "ava --tap | tap-mocha-reporter spec"
+    "test": "ava --tap | tap-mocha-reporter spec",
+    "test:watch": "ava --watch"
   },
   "author": "",
   "license": "MIT",

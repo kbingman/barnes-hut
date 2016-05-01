@@ -3,7 +3,8 @@ import { createDot } from './canvas/primitives';
 import { seededRandom } from './utils/math';
 import { times } from './utils/index';
 
-import { createNode } from './tree';
+import { createNode } from './tree/index';
+import { createParticles } from './tree/particles';
 
 const random = seededRandom(12345);
 const canvas = document.getElementById('canvas');
@@ -21,8 +22,7 @@ const createParticle = function () {
   };
 }
 
-let particles = [];
-times(500, (i) => particles.push(createParticle()));
+let particles = createParticles(1440, {width, height}, random);
 
 particles.forEach((p) => {
   createDot(context, { x: p.x, y: p.y, radius: p.radius, color: 'white' });
