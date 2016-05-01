@@ -3,7 +3,7 @@ import { seededRandom, round, sumOf } from '../../src/utils/math';
 import { createNode, findParticle } from '../../src/tree/index';
 import { createParticle, createParticles } from '../../src/tree/particles';
 
-const NODE_COUNT = 4222;
+const NODE_COUNT = 42;
 const random = seededRandom(12345);
 const bounds = { width: 500, height: 500 };
 const particles = createParticles(NODE_COUNT, bounds, random);
