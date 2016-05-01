@@ -5,7 +5,7 @@ import { createParticle, createParticles } from '../../src/tree/particles';
 
 const NODE_COUNT = 42;
 const random = seededRandom(12345);
-const bounds = { width: 500, height: 500 };
+const bounds = { width: 700, height: 500 };
 const particles = createParticles(NODE_COUNT, bounds, random);
 
 const root = { x: 0, y: 0, width: bounds.width, height: bounds.height }
@@ -40,4 +40,9 @@ test('all particles should exist', t => {
     let node = findParticle(particle, tree);
     t.deepEqual(node && node.particle, particle);
   });
+});
+
+test('all particles should exist', t => {
+  console.log(tree.center);
+  t.true(true);
 });

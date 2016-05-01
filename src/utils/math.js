@@ -21,3 +21,16 @@ export function sumOf (array, attr) {
     return total;
   }, 0);
 }
+
+export function distance (pos1, pos2) {
+  let dx = pos1.x - pos2.x;
+  let dy = pos1.y - pos2.y;
+  let d2 = dx * dx + dy * dy;
+
+  return {
+    d: Math.sqrt(d2),
+    d2: d2,
+    dx: dx,
+    dy: dy
+  };
+}

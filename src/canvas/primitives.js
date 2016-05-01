@@ -37,6 +37,14 @@ export function createCrosshair (context, {x, y, size, color}) {
   context.stroke();
 }
 
+export function createLine (context, {x1, y1, x2, y2, color}) {
+  context.beginPath();
+  context.strokeStyle = color || 'hsla(0, 100%, 100%, 0.3)';
+  context.moveTo(x1, y1);
+  context.lineTo(x2, y2);
+  context.stroke();
+}
+
 export function creatQuadraticCurve (context, {x1, y1, x2, y2, xc, yc, color}) {
   context.beginPath();
   context.strokeStyle = color || 'hsla(0, 100%, 100%, 0.3)';

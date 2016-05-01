@@ -5,6 +5,8 @@ export function createParticle (random, {width, height}) {
   return {
     x: random() * width,
     y: random() * height,
+    vx: 0,
+    vy: 0,
     mass: mass,
     radius: mass
   };

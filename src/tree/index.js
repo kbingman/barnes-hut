@@ -5,12 +5,15 @@ import { sumOf } from '../utils/math';
  * @param {array} children
  * @returns {object} position - X and Y coords
  */
-const findCenter = function (children) {
-  let m = sumOf(children, 'mass');
+export function findCenter (node) {
+  let { children, x, y } = node;
+  let m = children && sumOf(children, 'mass');
   if (m) {
     let masses = children.reduce((m, c) => {
-      m.x += c.x * c.mass || 0;
-      m.y += c.y * c.mass || 0;
+      if (c.center) {
+        m.x += c.center.x * c.mass || 0;
+        m.y += c.center.y * c.mass || 0;
+      }
       return m;
     }, { x: 0, y: 0 });
 
@@ -25,8 +28,8 @@ export function createChildren (particles, bounds) {
 
   let children = [
     { x: bounds.x, y: bounds.y, width, height },
-    { x: bounds.x + height, y: bounds.y, width, height },
-    { x: bounds.x + height, y: bounds.y + height, width, height },
+    { x: bounds.x + width, y: bounds.y, width, height },
+    { x: bounds.x + width, y: bounds.y + height, width, height },
     { x: bounds.x, y: bounds.y + height, width, height }
   ];
 
@@ -49,7 +52,7 @@ export function createNode (particles, bounds) {
 
   if (particles.length > 1) {
     node.children = createChildren(particles, bounds);
-    node.center = findCenter(node.children);
+    node.center = findCenter(node);
     return node;
   }
 
@@ -64,18 +67,16 @@ export function findParticle (particle, tree) {
     if (node.particle && node.particle.x === particle.x && node.particle.y === particle.y) {
       return node;
     }
-    if (!node.children) {
-      return;
+    if (node.children) {
+      return node.children.reduce((memo, c) => {
+        let result = traverse(particle, c);
+
+        if (result) {
+          memo = result;
+        }
+        return memo;
+      }, null);
     }
-
-    return node.children.reduce((memo, c) => {
-      let result = traverse(particle, c);
-
-      if (result) {
-        memo = result;
-      }
-      return memo;
-    }, null);
   };
 
   return traverse(particle, tree);
